@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_test_beed/src/pages/login_page.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -27,6 +28,11 @@ class SignupController extends GetxController {
   }
 
   Future<void> signupUser() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(msg: 'No internet connection.');
+      return;
+    }
     if (!GetUtils.isEmail(email.value) || password.value.isEmpty) {
       Fluttertoast.showToast(msg: 'Please fill all fields correctly.');
       return;

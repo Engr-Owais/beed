@@ -1,4 +1,6 @@
-import 'package:flutter_test_beed/src/pages/home_page.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter_test_beed/src/pages/landing_page.dart';
+import 'package:flutter_test_beed/src/pages/login_page.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,24 +30,27 @@ class LoginController extends GetxController {
   }
 
   Future<void> loginUser() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(msg: 'No internet connection.');
+      return;
+    }
     if (!GetUtils.isEmail(email.value) || password.value.isEmpty) {
       Fluttertoast.showToast(msg: 'Please fill all fields correctly.');
       return;
     }
-
     isLoading.value = true;
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: email.value,
         password: password.value,
       );
-      await saveLoginSession(
-          userCredential.user!.uid, userCredential.user!.email!);
+      await saveLoginSession();
 
       isLoading.value = false;
       UserModel user = UserModel(
           id: userCredential.user!.uid, email: userCredential.user!.email!);
-      Get.offAll(HomePage());
+      Get.offAll(LandingPage());
       print('Login successful: ${user.id}');
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
@@ -59,10 +64,29 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> saveLoginSession(String userId, String email) async {
+  Future<void> signOutUser() async {
+    var connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      Fluttertoast.showToast(msg: 'No internet connection.');
+      return;
+    }
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.offAll(LoginPage());
+      Fluttertoast.showToast(msg: 'Sign-out successful');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error occurred during sign-out');
+      print(e);
+    }
+  }
+
+  Future<void> saveLoginSession() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isLoggedIn', true);
-    prefs.setString('userId', userId);
-    prefs.setString('email', email);
+  }
+
+  Future<void> deleteLoginSession() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', false);
   }
 }
