@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "156560195896",
+    "project_id": "beedtest-8f008",
+    "storage_bucket": "beedtest-8f008.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:156560195896:android:1e157daaffc06b1e5c01cd",
+        "android_client_info": {
+          "package_name": "com.example.flutter_test_beed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "156560195896-sm679ad4341ikhnd4b605fgomc9a77m9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBeO94P06ZZAfO1Bo5uQxGg5kAYF-AqIFA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "156560195896-sm679ad4341ikhnd4b605fgomc9a77m9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
