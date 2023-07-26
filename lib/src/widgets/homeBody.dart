@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/beer_controller.dart';
+import '../controllers/api_controller.dart';
 
 class HomeBody extends StatelessWidget {
   const HomeBody({
@@ -9,46 +9,41 @@ class HomeBody extends StatelessWidget {
     required this.controller,
   });
 
-  final HomeController controller;
+  final ApiController controller;
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: controller.loadDataFromApi,
-      child: Obx(
-        () {
-          if (controller.isLoading.value && controller.beers.isEmpty) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            return ListView.builder(
-              controller: controller.scrollController,
-              itemCount:
-                  controller.beers.length + 1, // +1 for the loading indicator
-              itemBuilder: (context, index) {
-                if (index < controller.beers.length) {
-                  final beer = controller.beers[index];
-                  return ListTile(
-                    title: Text(beer.name),
-                    subtitle: Text(beer.tagline),
-                  );
-                } else {
-                  if (!controller.isLoading.value) {
-                    controller.loadDataFromApi();
-                  }
-                  return Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-              },
-            );
-          }
-        },
-      ),
+    return Obx(
+      () {
+        if (controller.loading.value && controller.result.isEmpty) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return ListView.builder(
+            controller: controller.scrollController,
+            itemCount: controller.isInternetConnected.isTrue
+                ? controller.result.length + 1
+                : controller.result.length,  // +1 for the loading indicator
+            itemBuilder: (context, index) {
+              if (index < controller.result.length) {
+                final beer = controller.result[index];
+                return ListTile(
+                  title: Text(beer.name),
+                  subtitle: Text(beer.url),
+                );
+              } else {
+                return Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+            },
+          );
+        }
+      },
     );
   }
 }

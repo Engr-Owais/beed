@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../controllers/beer_controller.dart';
+import '../controllers/api_controller.dart';
 import '../widgets/drawer.dart';
 import '../widgets/homeBody.dart';
 
 class HomePage extends StatelessWidget {
-  final HomeController controller = Get.put(HomeController());
+  final ApiController controller = Get.put(ApiController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
