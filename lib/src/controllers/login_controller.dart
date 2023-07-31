@@ -51,7 +51,6 @@ class LoginController extends GetxController {
       UserModel user = UserModel(
           id: userCredential.user!.uid, email: userCredential.user!.email!);
       Get.offAll(LandingPage());
-      print('Login successful: ${user.id}');
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
       if (e.code == 'user-not-found') {

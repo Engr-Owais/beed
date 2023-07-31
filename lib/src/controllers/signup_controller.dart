@@ -13,19 +13,19 @@ class SignupController extends GetxController {
   final RxString password = ''.obs;
   final RxBool isLoading = false.obs;
 
-  String? validateEmail(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your email';
-    }
-    return null;
-  }
+  // String? validateEmail(String value) {
+  //   if (value.isEmpty) {
+  //     return 'Please enter your email';
+  //   }
+  //   return null;
+  // }
 
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  }
+  // String? validatePassword(String value) {
+  //   if (value.isEmpty) {
+  //     return 'Please enter your password';
+  //   }
+  //   return null;
+  // }
 
   Future<void> signupUser() async {
     var connectivityResult = await Connectivity().checkConnectivity();
@@ -46,10 +46,11 @@ class SignupController extends GetxController {
         password: password.value,
       );
       isLoading.value = false;
+      
       UserModel user = UserModel(
           id: userCredential.user!.uid, email: userCredential.user!.email!);
       Get.to(LoginPage());
-      print('Signup successful: ${user.id}');
+      // Get.toNamed('/');
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
       if (e.code == 'email-already-in-use') {

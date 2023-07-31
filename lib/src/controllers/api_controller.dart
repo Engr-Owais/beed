@@ -12,43 +12,47 @@ class ApiController extends GetxController {
   var offset = 0.obs;
   var isInternetConnected = true.obs;
 
+  void setOffset(int offsetVal) {
+    offset.value = offsetVal + 10;
+  }
+
   @override
   void onInit() {
     super.onInit();
 
-    loadDataFromApi(offset);
+    loadDataFromApi();
+
     handleNext();
   }
 
   void loadDataFromHive() async {
     try {
       final box = await Hive.openBox<Result>('results');
-      box.clear();
-      result.addAll(box.values.toList());
+      if (result.length == 0) {
+        offset.value = await box.values.length;
+        result.addAll(box.values.toList());
+      }
     } catch (e) {
       print('Error loading data from Hive: $e');
     }
   }
 
-  Future<void> loadDataFromApi(currentOffset) async {
+  Future<void> loadDataFromApi() async {
+    print(offset.value);
     try {
       isInternetConnected.value = await Utils.checkInternetConnectivity();
       if (isInternetConnected.isTrue) {
         loading.value = true;
-        var response = await ApiService.fetchBeers(offset: currentOffset);
+
+        var response = await ApiService.fetchAPIData(offset: offset.value);
 
         result = result + response.results;
-        int localOffset = offset.value + 10;
 
         loading.value = false;
-        offset.value = localOffset;
+        setOffset(offset.value);
 
         // Save new data to Hive
-
-        final box = await Hive.openBox<Result>('results');
-
-        box.clear();
-        box.addAll(result);
+        await SaveNewDataHive();
       } else {
         loadDataFromHive();
       }
@@ -59,11 +63,18 @@ class ApiController extends GetxController {
     }
   }
 
+  Future<void> SaveNewDataHive() async {
+    final box = await Hive.openBox<Result>('results');
+
+    await box.clear();
+    await box.addAll(result);
+  }
+
   void handleNext() {
     scrollController.addListener(() async {
       if (scrollController.position.maxScrollExtent ==
           scrollController.position.pixels) {
-        loadDataFromApi(offset.value);
+        loadDataFromApi();
       }
     });
   }

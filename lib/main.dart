@@ -12,6 +12,5 @@ void main() async {
   Hive.registerAdapter(ResultAdapter());
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  print(isLoggedIn);
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }

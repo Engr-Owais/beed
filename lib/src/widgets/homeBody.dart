@@ -22,15 +22,16 @@ class HomeBody extends StatelessWidget {
         } else {
           return ListView.builder(
             controller: controller.scrollController,
+
             itemCount: controller.isInternetConnected.isTrue
                 ? controller.result.length + 1
-                : controller.result.length,  // +1 for the loading indicator
+                : controller.result.length, // +1 for the loading indicator
             itemBuilder: (context, index) {
               if (index < controller.result.length) {
-                final beer = controller.result[index];
+                final pokemon = controller.result[index];
                 return ListTile(
-                  title: Text(beer.name),
-                  subtitle: Text(beer.url),
+                  title: Text(pokemon.name),
+                  subtitle: Text(pokemon.url),
                 );
               } else {
                 return Padding(
