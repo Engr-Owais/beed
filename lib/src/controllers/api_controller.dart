@@ -38,7 +38,6 @@ class ApiController extends GetxController {
   }
 
   Future<void> loadDataFromApi() async {
-    print(offset.value);
     try {
       isInternetConnected.value = await Utils.checkInternetConnectivity();
       if (isInternetConnected.isTrue) {

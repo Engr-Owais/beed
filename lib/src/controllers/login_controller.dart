@@ -15,20 +15,6 @@ class LoginController extends GetxController {
   final RxString password = ''.obs;
   final RxBool isLoading = false.obs;
 
-  String? validateEmail(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your email';
-    }
-    return null;
-  }
-
-  String? validatePassword(String value) {
-    if (value.isEmpty) {
-      return 'Please enter your password';
-    }
-    return null;
-  }
-
   Future<void> loginUser() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     if (connectivityResult == ConnectivityResult.none) {
@@ -50,6 +36,7 @@ class LoginController extends GetxController {
       isLoading.value = false;
       UserModel user = UserModel(
           id: userCredential.user!.uid, email: userCredential.user!.email!);
+      // Get.offAllNamed('/landingPage');
       Get.offAll(LandingPage());
     } on FirebaseAuthException catch (e) {
       isLoading.value = false;
